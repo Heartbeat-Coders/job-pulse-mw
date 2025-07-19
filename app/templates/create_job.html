@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Job - Heartbeat Coders</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      width: 250px;
+      background-color: #2F4F2F;
+      color: #D4E6D4;
+      padding: 20px 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+    
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid #3E6B3E;
+    }
+    
+    .sidebar-header h2 {
+      color: #fff;
+      font-size: 1.3rem;
+    }
+    
+    .sidebar-nav {
+      margin-top: 20px;
+    }
+    
+    .nav-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .nav-item:hover, .nav-item.active {
+      background-color: #4A7A4A;
+    }
+    
+    .nav-item i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      background-color: #fff;
+ valmist: none !important; /* Ensure no conflict with other styles */
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .header h1 {
+      color: #2F4F2F;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #4A7A4A;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .job-form {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    .form-group textarea {
+      min-height: 200px;
+      resize: vertical;
+    }
+    
+    .submit-btn {
+      background-color: #4A7A4A;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .submit-btn:hover {
+      background-color: #3E6B3E;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>Heartbeat Coders</h2>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item" onclick="loadDashboard()">
+        <i>📊</i> Dashboard
+      </div>
+      <div class="nav-item active" onclick="loadCreateJob()">
+        <i>➕</i> Create Job
+      </div>
+      <div class="nav-item" onclick="loadReviewApplications()">
+        <i>📝</i> Review Applications
+      </div>
+      <div class="nav-item" onclick="logout()">
+        <i>🚪</i> Logout
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <div class="header">
+      <h1>Create New Job</h1>
+      <div class="user-info">
+        <div class="user-avatar">{{ user.first_name|first }}{{ user.last_name|first }}</div>
+        <span>{{ user.first_name }} {{ user.last_name }}</span>
+      </div>
+    </div>
+    
+    <div class="job-form">
+      <form id="createJobForm" action="/jobs/create" method="post">
+        <div class="form-group">
+          <label for="title">Job Title</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Job Description</label>
+          <textarea id="description" name="description" required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="deadline">Application Deadline</label>
+          <input type="date" id="deadline" name="deadline" required>
+        </div>
+        
+        <button type="submit" class="submit-btn">Create Job</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('deadline').min = today;
+    });
+    
+    function loadDashboard() {
+      window.location.href = '/recruiter/dashboard';
+    }
+    
+    function loadCreateJob() {
+      window.location.href = '/jobs/create';
+    }
+    
+    function loadReviewApplications() {
+      window.location.href = '/recruiter/applications';
+    }
+    
+    function logout() {
+      window.location.href = '/logout';
+    }
+    
+    document.getElementById('createJobForm').addEventListener('submit', function(e) {
+      const deadline = new Date(document.getElementById('deadline').value);
+      const today = new Date();
+      
+      if (deadline <= today) {
+        e.preventDefault();
+        alert('Deadline must be in the future');
+      }
+    });
+  </script>
+</body>
+</html>

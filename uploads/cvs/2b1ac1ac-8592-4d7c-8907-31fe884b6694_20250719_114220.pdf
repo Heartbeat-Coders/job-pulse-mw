@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recruiter Dashboard - Heartbeat Coders</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #2F4F2F; /* dark forest green */
+      color: #D4E6D4; /* light sage */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    header {
+      background-color: #1F321F; /* even darker green */
+      color: #D4E6D4;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: #D4E6D4;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    nav a:hover, nav a.active {
+      background-color: #4A7A4A; /* medium green */
+      text-decoration: none;
+      color: #FFF;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 40px auto;
+      background: #3E6B3E; /* medium dark green panel */
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      box-sizing: border-box;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      padding: 30px;
+    }
+
+    section {
+      flex: 1 1 450px;
+      min-width: 300px;
+    }
+
+    h1, h2 {
+      margin-top: 0;
+      color: #D4E6D4;
+      font-weight: 900;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      text-align: center;
+      width: 100%;
+    }
+
+    form label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      margin-top: 20px;
+      color: #D4E6D4;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="tel"],
+    form select,
+    form textarea,
+    form input[type="file"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #D4E6D4;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      font-family: inherit;
+      background-color: #2F4F2F;
+      color: #D4E6D4;
+    }
+    form input[type="text"]:focus,
+    form input[type="email"]:focus,
+    form input[type="tel"]:focus,
+    form select:focus,
+    form textarea:focus,
+    form input[type="file"]:focus {
+      outline: none;
+      border-color: #A3C586;
+      background-color: #3E6B3E;
+    }
+
+    form textarea {
+      min-height: 140px;
+      resize: vertical;
+      color: #D4E6D4;
+    }
+
+    form button {
+      margin-top: 30px;
+      background-color: #4A7A4A; /* medium green */
+      color: #D4E6D4;
+      border: none;
+      border-radius: 6px;
+      font-weight: 900;
+      font-size: 1.2rem;
+      padding: 15px 0;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    form button:hover {
+      background-color: #2B4B2B; /* darker green */
+    }
+
+    .job {
+      border: 2px solid #D4E6D4;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 25px;
+      background-color: #2F4F2F;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .job-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #D4E6D4;
+    }
+
+    .job-location {
+      font-style: italic;
+      font-size: 1rem;
+      color: #D4E6D4;
+    }
+
+    button.view-applicants {
+      background-color: #4A7A4A;
+      color: #D4E6D4;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+    }
+
+    button.view-applicants:hover {
+      background-color: #2B4B2B;
+    }
+
+    .applicants-list {
+      margin-top: 20px;
+      border-top: 1px solid #D4E6D4;
+      padding-top: 20px;
+      display: none;
+      color: #D4E6D4;
+    }
+
+    .applicant {
+      border-bottom: 1px solid #a8caa8;
+      padding: 12px 0;
+    }
+
+    .applicant:last-child {
+      border-bottom: none;
+    }
+
+    .applicant-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #D4E6D4;
+    }
+
+    .applicant-contact {
+      font-size: 0.95rem;
+      margin: 4px 0;
+      color: #c7d9c7;
+    }
+
+    .download-links a {
+      margin-right: 15px;
+      color: #A3C586;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid #A3C586;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .download-links a:hover {
+      background-color: #A3C586;
+      color: #2F4F2F;
+    }
+
+    footer {
+      background-color: #1F321F;
+      color: #D4E6D4;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      main {
+        flex-direction: column;
+      }
+      section {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Heartbeat Coders E-Recruitment</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="recruiter.html" class="active">Recruiter</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Recruiter Dashboard</h1>
+
+    <section aria-label="Post a new job">
+      <h2>Post a Job Vacancy</h2>
+      <form id="jobPostForm" action="#" method="post" enctype="multipart/form-data" novalidate>
+        <label for="company-name">Company Name *</label>
+        <input type="text" id="company-name" name="company-name" placeholder="Your company name" required />
+
+        <label for="contact-person">Contact Person *</label>
+        <input type="text" id="contact-person" name="contact-person" placeholder="Full name" required />
+
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
+
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" name="phone" placeholder="+265 9XXXXXXXX" required />
+
+        <label for="job-title">Job Title *</label>
+        <input type="text" id="job-title" name="job-title" placeholder="e.g., Senior Developer" required />
+
+        <label for="job-type">Job Type *</label>
+        <select id="job-type" name="job-type" required>
+          <option value="" disabled selected>Select job type</option>
+          <option value="full-time">Full Time</option>
+          <option value="part-time">Part Time</option>
+          <option value="contract">Contract</option>
+          <option value="internship">Internship</option>
+          <option value="temporary">Temporary</option>
+        </select>
+
+        <label for="location">Job Location *</label>
+        <input type="text" id="location" name="location" placeholder="City, Country" required />
+
+        <label for="salary">Salary Range</label>
+        <input type="text" id="salary" name="salary" placeholder="e.g., MWK 1,000,000 - MWK 2,000,000" />
+
+        <label for="job-description">Job Description *</label>
+        <textarea id="job-description" name="job-description" placeholder="Describe the role, responsibilities, requirements..." required></textarea>
+
+        <label for="job-file">Upload Job Description (optional)</label>
+        <input type="file" id="job-file" name="job-file" accept=".pdf,.doc,.docx" />
+
+        <button type="submit">Post Job</button>
+      </form>
+    </section>
+
+    <section aria-label="View posted jobs and applicants">
+      <h2>Posted Jobs & Applicants</h2>
+
+      <div class="job" id="job1">
+        <div class="job-header">
+          <div>
+            <div class="job-title">Frontend Developer</div>
+            <div class="job-location">Tech Solutions - Lilongwe</div>
+          </div>
+          <button class="view-applicants" data-job="job1">View Applicants</button>
+        </div>
+        <div class="applicants-list" id="applicants-job1">
+          <div class="applicant">
+            <div class="applicant-name">Alice Banda</div>
+            <div class="applicant-contact">alice@example.com | +265 991234567</div>
+            <div class="download-links">
+              <a href="#" download="Alice_Banda_CV.pdf">Download CV</a>
+              <a href="#" download="Alice_Banda_CoverLetter.pdf">Download Cover Letter</a>
+            </div>
+          </div>
+          <div class="applicant">
+            <div class="applicant-name">John Mwale</div>
+            <div class="applicant-contact">john@example.com | +265 998765432</div>
+            <div class="download-links">
+              <a href="#" download="John_Mwale_CV.pdf">Download CV</a>
+              <a href="#" download="John_Mwale_CoverLetter.pdf">Download Cover Letter</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="job" id="job2">
+        <div class="job-header">
+          <div>
+            <div class="job-title">Data Analyst</div>
+            <div class="job-location">DataWorks - Blantyre</div>
+          </div>
+          <button class="view-applicants" data-job="job2">View Applicants</button>
+        </div>
+        <div class="applicants-list" id="applicants-job2">
+          <div class="applicant">
+            <div class="applicant-name">Mary Kamanga</div>
+            <div class="applicant-contact">mary@example.com | +265 990112233</div>
+            <div class="download-links">
+              <a href="#" download="Mary_Kamanga_CV.pdf">Download CV</a>
+              <a href="#" download="Mary_Kamanga_CoverLetter.pdf">Download Cover Letter</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="job" id="job3">
+        <div class="job-header">
+          <div>
+            <div class="job-title">Marketing Specialist</div>
+            <div class="job-location">Creative Minds - Mzuzu</div>
+          </div>
+          <button class="view-applicants" data-job="job3">View Applicants</button>
+        </div>
+        <div class="applicants-list" id="applicants-job3">
+          <div class="applicant">
+            <div class="applicant-name">Peter Chirwa</div>
+            <div class="applicant-contact">peter@example.com | +265 997889900</div>
+            <div class="download-links">
+              <a href="#" download="Peter_Chirwa_CV.pdf">Download CV</a>
+              <a href="#" download="Peter_Chirwa_CoverLetter.pdf">Download Cover Letter</a>
+            </div>
+          </div>
+          <div class="applicant">
+            <div class="applicant-name">Grace Phiri</div>
+            <div class="applicant-contact">grace@example.com | +265 995667788</div>
+            <div class="download-links">
+              <a href="#" download="Grace_Phiri_CV.pdf">Download CV</a>
+              <a href="#" download="Grace_Phiri_CoverLetter.pdf">Download Cover Letter</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Heartbeat Coders | 100Days Python Bootcamp Inspired
+  </footer>
+
+  <script>
+    // Toggle applicant list visibility
+    document.querySelectorAll('button.view-applicants').forEach(button => {
+      button.addEventListener('click', () => {
+        const jobId = button.getAttribute('data-job');
+        const list = document.getElementById('applicants-' + jobId);
+
+        // Hide all other lists
+        document.querySelectorAll('.applicants-list').forEach(l => {
+          if (l !== list) l.style.display = 'none';
+        });
+
+        // Toggle this one
+        if (list.style.display === 'block') {
+          list.style.display = 'none';
+          button.textContent = 'View Applicants';
+        } else {
+          list.style.display = 'block';
+          button.textContent = 'Hide Applicants';
+        }
+      });
+    });
+
+    // Placeholder form submission handler
+    document.getElementById('jobPostForm').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Job posting submitted! (this is a placeholder)');
+      e.target.reset();
+    });
+  </script>
+
+</body>
+</html>

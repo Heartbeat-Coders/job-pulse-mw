@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Applications - Heartbeat Coders</title>
+  <style>
+    /* Styles remain unchanged */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      width: 250px;
+      background-color: #2F4F2F;
+      color: #D4E6D4;
+      padding: 20px 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+    
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid #3E6B3E;
+    }
+    
+    .sidebar-header h2 {
+      color: #fff;
+      font-size: 1.3rem;
+    }
+    
+    .sidebar-nav {
+      margin-top: 20px;
+    }
+    
+    .nav-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .nav-item:hover, .nav-item.active {
+      background-color: #4A7A4A;
+    }
+    
+    .nav-item i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      background-color: #fff;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .header h1 {
+      color: #2F4F2F;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #4A7A4A;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .applications-container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    
+    .applications-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .applications-header h2 {
+      color: #2F4F2F;
+    }
+    
+    .search-filter {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .search-filter input,
+    .search-filter select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    th {
+      background-color: #f9f9f9;
+      color: #555;
+      font-weight: 600;
+    }
+    
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .status {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .status.submitted {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    .status.shortlisted {
+      background-color: #e8f5e9;
+      color: #388e3c;
+    }
+    
+    .status.rejected {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+    
+    .action-link {
+      color: #2F4F2F;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .action-link:hover {
+      text-decoration: underline;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 5px;
+    }
+    
+    .page-btn {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    
+    .page-btn.active {
+      background-color: #2F4F2F;
+      color: white;
+      border-color: #2F4F2F;
+    }
+    
+    .page-btn:hover:not(.active) {
+      background-color: #f5f5f5;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+      
+      .applications-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .search-filter {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .search-filter input,
+      .search-filter select {
+        width: 100%;
+      }
+      
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>Heartbeat Coders</h2>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item" onclick="loadDashboard()">
+        <i>📊</i> Dashboard
+      </div>
+      <div class="nav-item" onclick="loadCreateJob()">
+        <i>➕</i> Create Job
+      </div>
+      <div class="nav-item active" onclick="loadReviewApplications()">
+        <i>📝</i> Review Applications
+      </div>
+      <div class="nav-item" onclick="logout()">
+        <i>🚪</i> Logout
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <div class="header">
+      <h1>Review Applications</h1>
+      <div class="user-info">
+        <div class="user-avatar">{{ user.first_name|first }}{{ user.last_name|first }}</div>
+        <span>{{ user.first_name }} {{ user.last_name }}</span>
+      </div>
+    </div>
+    
+    <div class="applications-container">
+      <div class="applications-header">
+        <h2>All Applications</h2>
+        <div class="search-filter">
+          <input type="text" id="searchInput" placeholder="Search applicants...">
+          <select id="statusFilter">
+            <option value="">All Statuses</option>
+            <option value="submitted">Submitted</option>
+            <option value="shortlisted">Shortlisted</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>Job Title</th>
+            <th>Applied On</th>
+            <th>Status</th>
+            <th>Score</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="applicationsTableBody">
+          {% for application in applications %}
+          <tr>
+            <td>{{ application.user.first_name }} {{ application.user.last_name }}</td>
+            <td>{{ application.job.title }}</td>
+            <td>{{ application.created_at }}</td>
+            <td>
+              <span class="status {{ application.status }}">{{ application.status }}</span>
+            </td>
+            <td>{{ application.score if application.score else '-' }}</td>
+            <td>
+              <a href="/recruiter/applications/{{ application.id }}" class="action-link">View Details</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" style="text-align: center;">No applications found</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      
+      <div class="pagination">
+        <button class="page-btn">Previous</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Move navigation functions to global scope
+    function loadDashboard() {
+      window.location.href = '/recruiter/dashboard';
+    }
+    
+    function loadCreateJob() {
+      window.location.href = '/jobs/create';
+    }
+    
+    function loadReviewApplications() {
+      window.location.href = '/recruiter/applications';
+    }
+    
+    function logout() {
+      window.location.href = '/logout';
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('searchInput');
+      const statusFilter = document.getElementById('statusFilter');
+      const tableBody = document.getElementById('applicationsTableBody');
+      let applications = [];
+
+      async function loadApplications() {
+        try {
+          const response = await fetch('/api/recruiter/applications');
+          if (response.ok) {
+            applications = await response.json();
+            renderApplications(applications);
+          } else {
+            throw new Error('Failed to load applications');
+          }
+        } catch (error) {
+          console.error('Error loading applications:', error);
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; color: red;">Error loading applications. Please try again.</td>
+            </tr>
+          `;
+        }
+      }
+
+      function renderApplications(data) {
+        if (data.length === 0) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center;">No applications found</td>
+            </tr>
+          `;
+          return;
+        }
+
+        tableBody.innerHTML = data.map(app => `
+          <tr>
+            <td>${escapeHtml(app.user.first_name)} ${escapeHtml(app.user.last_name)}</td>
+            <td>${escapeHtml(app.job.title)}</td>
+            <td>${new Date(app.created_at).toLocaleDateString()}</td>
+            <td><span class="status ${app.status}">${app.status}</span></td>
+            <td>${app.score ? app.score + '/5' : '-'}</td>
+            <td>
+              <a href="/recruiter/applications/${app.id}" class="action-link">View Details</a>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function filterApplications() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value.toLowerCase();
+
+        const filteredApplications = applications.filter(app => {
+          const applicantName = `${app.user.first_name} ${app.user.last_name}`.toLowerCase();
+          const jobTitle = app.job.title.toLowerCase();
+          const matchesSearch = applicantName.includes(searchTerm) || jobTitle.includes(searchTerm);
+          const matchesStatus = statusValue === '' || app.status.toLowerCase() === statusValue;
+          return matchesSearch && matchesStatus;
+        });
+
+        renderApplications(filteredApplications);
+      }
+
+      loadApplications();
+      searchInput.addEventListener('input', filterApplications);
+      statusFilter.addEventListener('change', filterApplications);
+    });
+  </script>
+</body>
+</html>

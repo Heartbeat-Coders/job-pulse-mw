@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Job Listings - Heartbeat Coders</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #A3C586;
+      color: #004B23;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #004B23;
+      color: #ffffff;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      margin: 40px 0 20px;
+      color: #004B23;
+      font-weight: 700;
+    }
+
+    .job-listing {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      padding: 25px 30px;
+      margin-bottom: 25px;
+      box-sizing: border-box;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .job-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #004B23;
+      flex: 1 1 auto;
+      min-width: 200px;
+    }
+
+    .company-location {
+      font-style: italic;
+      font-size: 1rem;
+      color: #004B23;
+      flex: 0 1 auto;
+    }
+
+    .job-description {
+      color: #333;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .apply-btn {
+      background-color: #004B23;
+      color: #ffffff;
+      padding: 12px 25px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .apply-btn:hover {
+      background-color: #023311;
+    }
+
+    @media (max-width: 480px) {
+      .job-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .company-location {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Heartbeat Coders E-Recruitment</h1>
+    <nav>
+      <a href="/dashboard">Home</a>
+      <a href="/jobs">Jobs</a>
+      {% if request.user %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/auth/logout">Logout</a>
+      {% else %}
+        <a href="/login">Login</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <h1>Available Job Listings</h1>
+
+  {% for job in jobs %}
+    <div class="job-listing">
+      <div class="job-header">
+        <div class="job-title">{{ job.title }}</div>
+        <div class="company-location">Location: Malawi</div>  {# You can replace with job.location if you have it #}
+      </div>
+      <div class="job-description">
+        {{ job.description }}
+      </div>
+      <a href="/apply/{{ job.id }}" class="apply-btn">Apply Now</a>
+    </div>
+  {% else %}
+    <p>No job listings available at the moment.</p>
+  {% endfor %}
+
+</body>
+</html>

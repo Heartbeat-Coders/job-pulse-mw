@@ -1,0 +1,98 @@
+/* static/styles.css */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: #004B23; /* dark green */
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 10px;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+nav a:hover, nav a.active {
+  background-color: #4A7A4A; /* medium green */
+  text-decoration: none;
+  color: #FFF;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+footer {
+  background-color: #1F321F;
+  color: #D4E6D4;
+  text-align: center;
+  padding: 20px;
+  margin-top: auto;
+}
+
+/* Hero section */
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #f0f8ff;
+  margin-bottom: 30px;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.hero button {
+  background-color: #004B23;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.hero button:hover {
+  background-color: #023311;
+}
+
+/* Dashboard styles */
+.dashboard-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.dashboard-container h1 {
+  color: #004B23;
+  margin-bottom: 20px;
+}

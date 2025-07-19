@@ -1,0 +1,35 @@
+<!-- app/templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Heartbeat Coders E-Recruitment</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Heartbeat Coders E-Recruitment</h1>
+    <nav>
+       <a href="/dashboard">Home</a>
+      <a href="/jobs">Jobs</a>
+      {% if request.user %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/auth/logout">Logout</a>
+      {% else %}
+        <a href="/login">Login</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <div class="dashboard-container">
+    <h1>Welcome, {{ user.first_name }}!</h1>
+    <p>You're logged in as {{ user.email }}</p>
+    <p>Your role: {{ user.role }}</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Heartbeat Coders | 100Days Python Bootcamp Inspired
+  </footer>
+</body>
+</html>

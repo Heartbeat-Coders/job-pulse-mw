@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Heartbeat Coders</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      width: 250px;
+      background-color: #2F4F2F;
+      color: #D4E6D4;
+      padding: 20px 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+    
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid #3E6B3E;
+    }
+    
+    .sidebar-header h2 {
+      color: #fff;
+      font-size: 1.3rem;
+    }
+    
+    .sidebar-nav {
+      margin-top: 20px;
+    }
+    
+    .nav-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .nav-item:hover, .nav-item.active {
+      background-color: #4A7A4A;
+    }
+    
+    .nav-item i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      background-color: #fff;
+      position: relative;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .header h1 {
+      color: #2F4F2F;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #4A7A4A;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2F4F2F;
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .section {
+      display: none;
+      margin-bottom: 30px;
+    }
+    
+    .section.active {
+      display: block;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    th {
+      background-color: #f9f9f9;
+      color: #555;
+      font-weight: 600;
+    }
+    
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .badge.admin { background-color: #ff6b6b; color: white; }
+    .badge.recruiter { background-color: #4A7A4A; color: white; }
+    .badge.applicant { background-color: #45b7d1; color: white; }
+    .badge.active { background-color: #388e3c; color: white; }
+    .badge.inactive { background-color: #757575; color: white; }
+    .badge.submitted { background-color: #1976d2; color: white; }
+    .badge.shortlisted { background-color: #388e3c; color: white; }
+    .badge.rejected { background-color: #d32f2f; color: white; }
+    .badge.withdrawn { background-color: #757575; color: white; }
+    
+    .action-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 5px;
+    }
+    
+    .btn-edit { background-color: #2F4F2F; color: white; }
+    .btn-delete { background-color: #d32f2f; color: white; }
+    .btn-toggle { background-color: #1976d2; color: white; }
+    
+    .search-bar {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    
+    .filter-select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .logout-btn {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      padding: 8px 16px;
+      background-color: #d32f2f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .logout-btn:hover {
+      background-color: #b71c1c;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+      
+      .logout-btn {
+        position: static;
+        display: block;
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>Heartbeat Coders</h2>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item active" onclick="showSection('dashboard')">
+        <i>📊</i> Dashboard
+      </div>
+      <div class="nav-item" onclick="showSection('users')">
+        <i>👥</i> Users
+      </div>
+      <div class="nav-item" onclick="showSection('jobs')">
+        <i>💼</i> Jobs
+      </div>
+      <div class="nav-item" onclick="showSection('applications')">
+        <i>📋</i> Applications
+      </div>
+      <div class="nav-item" onclick="showSection('settings')">
+        <i>⚙️</i> Settings
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <a href="/logout" class="logout-btn" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+    
+    <div class="header">
+      <h1>Admin Dashboard</h1>
+      <div class="user-info">
+        <div class="user-avatar">{{ user.first_name|first }}{{ user.last_name|first }}</div>
+        <span>{{ user.first_name }} {{ user.last_name }}</span>
+      </div>
+    </div>
+    
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="section active">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.total_users }}</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.active_jobs }}</div>
+          <div class="stat-label">Active Jobs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.total_applications }}</div>
+          <div class="stat-label">Applications</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.pending_applications }}</div>
+          <div class="stat-label">Pending Review</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Users Section -->
+    <div id="users" class="section">
+      <h2>User Management</h2>
+      <input type="text" class="search-bar" placeholder="Search users..." id="userSearch">
+      <div>
+        <select class="filter-select" id="roleFilter">
+          <option value="">All Roles</option>
+          <option value="admin">Admin</option>
+          <option value="recruiter">Recruiter</option>
+          <option value="applicant">Applicant</option>
+        </select>
+        <select class="filter-select" id="statusFilter">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          {% for user in users %}
+          <tr data-role="{{ user.role }}" data-status="{% if user.is_active %}active{% else %}inactive{% endif %}">
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td><span class="badge {{ user.role }}">{{ user.role }}</span></td>
+            <td><span class="badge {% if user.is_active %}active{% else %}inactive{% endif %}">{% if user.is_active %}Active{% else %}Inactive{% endif %}</span></td>
+            <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+              <button class="action-btn btn-edit" onclick="editUser('{{ user.id }}')">Edit</button>
+              <button class="action-btn btn-toggle" onclick="toggleUserStatus('{{ user.id }}', {{ user.is_active|lower }})">
+                {% if user.is_active %}Deactivate{% else %}Activate{% endif %}
+              </button>
+              <button class="action-btn btn-delete" onclick="deleteUser('{{ user.id }}')">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Jobs Section -->
+    <div id="jobs" class="section">
+      <h2>Job Management</h2>
+      <input type="text" class="search-bar" placeholder="Search jobs..." id="jobSearch">
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Created By</th>
+            <th>Applications</th>
+            <th>Deadline</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="jobsTableBody">
+          {% for job in jobs %}
+          <tr>
+            <td>{{ job.title }}</td>
+            <td>{{ job.creator.first_name }} {{ job.creator.last_name }}</td>
+            <td>{{ job.applications|length }}</td>
+            <td>{{ job.deadline.strftime('%Y-%m-%d') }}</td>
+            <td>{{ job.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+              <button class="action-btn btn-edit" onclick="viewJob('{{ job.id }}')">View</button>
+              <button class="action-btn btn-delete" onclick="deleteJob('{{ job.id }}')">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Applications Section -->
+    <div id="applications" class="section">
+      <h2>Application Management</h2>
+      <input type="text" class="search-bar" placeholder="Search applications..." id="applicationSearch">
+      <select class="filter-select" id="applicationStatusFilter">
+        <option value="">All Status</option>
+        <option value="submitted">Submitted</option>
+        <option value="shortlisted">Shortlisted</option>
+        <option value="rejected">Rejected</option>
+        <option value="withdrawn">Withdrawn</option>
+      </select>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>Job</th>
+            <th>Status</th>
+            <th>Score</th>
+            <th>Applied</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="applicationsTableBody">
+          {% for application in applications %}
+          <tr data-status="{{ application.status }}">
+            <td>{{ application.user.first_name }} {{ application.user.last_name }}</td>
+            <td>{{ application.job.title }}</td>
+            <td><span class="badge {{ application.status }}">{{ application.status }}</span></td>
+            <td>{{ application.score if application.score else 'N/A' }}</td>
+            <td>{{ application.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+              <button class="action-btn btn-edit" onclick="updateApplicationStatus('{{ application.id }}')">Update</button>
+              <button class="action-btn btn-delete" onclick="deleteApplication('{{ application.id }}')">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Settings Section -->
+    <div id="settings" class="section">
+      <h2>System Settings</h2>
+      <div style="max-width: 500px;">
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">System Name</label>
+          <input type="text" value="Heartbeat Coders E-Recruitment" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" readonly>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Admin Email</label>
+          <input type="email" value="{{ user.email }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" readonly>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">System Version</label>
+          <input type="text" value="1.0.0" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" readonly>
+        </div>
+        <button style="padding: 10px 20px; background-color: #2F4F2F; color: white; border: none; border-radius: 4px; cursor: pointer;">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Navigation
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Remove active class from all nav items
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Show selected section
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Add active class to clicked nav item
+      document.querySelectorAll('.nav-item').forEach(item => {
+        if (item.getAttribute('onclick').includes(sectionId)) {
+          item.classList.add('active');
+        }
+      });
+    }
+    
+    // Search functionality
+    function setupSearch(searchId, tableBodyId, searchColumns) {
+      document.getElementById(searchId).addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const rows = document.querySelectorAll(`#${tableBodyId} tr`);
+        
+        rows.forEach(row => {
+          const text = Array.from(row.children).slice(0, searchColumns)
+            .map(cell => cell.textContent.toLowerCase()).join(' ');
+          row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+      });
+    }
+    
+    setupSearch('userSearch', 'usersTableBody', 3);
+    setupSearch('jobSearch', 'jobsTableBody', 2);
+    setupSearch('applicationSearch', 'applicationsTableBody', 3);
+    
+    // Filter functionality
+    document.getElementById('roleFilter').addEventListener('change', function() {
+      const selectedRole = this.value;
+      const rows = document.querySelectorAll('#usersTableBody tr');
+      
+      rows.forEach(row => {
+        const role = row.getAttribute('data-role');
+        row.style.display = !selectedRole || role === selectedRole ? '' : 'none';
+      });
+    });
+    
+    document.getElementById('statusFilter').addEventListener('change', function() {
+      const selectedStatus = this.value;
+      const rows = document.querySelectorAll('#usersTableBody tr');
+      
+      rows.forEach(row => {
+        const status = row.getAttribute('data-status');
+        row.style.display = !selectedStatus || status === selectedStatus ? '' : 'none';
+      });
+    });
+    
+    document.getElementById('applicationStatusFilter').addEventListener('change', function() {
+      const selectedStatus = this.value;
+      const rows = document.querySelectorAll('#applicationsTableBody tr');
+      
+      rows.forEach(row => {
+        const status = row.getAttribute('data-status');
+        row.style.display = !selectedStatus || status === selectedStatus ? '' : 'none';
+      });
+    });
+    
+    // Admin functions
+    async function editUser(userId) {
+      try {
+        const response = await fetch(`/admin/users/${userId}`);
+        const user = await response.json();
+        
+        // Open modal or form with user data
+        alert(`Edit user: ${user.first_name} ${user.last_name}`);
+      } catch (error) {
+        alert('Error loading user data');
+      }
+    }
+    
+    async function toggleUserStatus(userId, currentStatus) {
+      const action = currentStatus ? 'deactivate' : 'activate';
+      if (confirm(`Are you sure you want to ${action} this user?`)) {
+        try {
+          const response = await fetch(`/admin/users/${userId}/toggle-status`, {
+            method: 'POST'
+          });
+          if (response.ok) {
+            location.reload();
+          }
+        } catch (error) {
+          alert('Error updating user status');
+        }
+      }
+    }
+    
+    async function deleteUser(userId) {
+      if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+        try {
+          const response = await fetch(`/admin/users/${userId}`, {
+            method: 'DELETE'
+          });
+          if (response.ok) {
+            location.reload();
+          }
+        } catch (error) {
+          alert('Error deleting user');
+        }
+      }
+    }
+    
+    async function deleteJob(jobId) {
+      if (confirm('Are you sure you want to delete this job?')) {
+        try {
+          const response = await fetch(`/admin/jobs/${jobId}`, {
+            method: 'DELETE'
+          });
+          if (response.ok) {
+            location.reload();
+          }
+        } catch (error) {
+          alert('Error deleting job');
+        }
+      }
+    }
+    
+    async function deleteApplication(applicationId) {
+      if (confirm('Are you sure you want to delete this application?')) {
+        try {
+          const response = await fetch(`/admin/applications/${applicationId}`, {
+            method: 'DELETE'
+          });
+          if (response.ok) {
+            location.reload();
+          }
+        } catch (error) {
+          alert('Error deleting application');
+        }
+      }
+    }
+    
+    function viewJob(jobId) {
+      window.open(`/jobs/${jobId}`, '_blank');
+    }
+    
+    function updateApplicationStatus(applicationId) {
+      const newStatus = prompt('Enter new status (submitted, shortlisted, rejected):');
+      if (newStatus && ['submitted', 'shortlisted', 'rejected'].includes(newStatus)) {
+        fetch(`/admin/applications/${applicationId}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        }).then(response => {
+          if (response.ok) {
+            location.reload();
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

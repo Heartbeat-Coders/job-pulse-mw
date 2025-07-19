@@ -1,0 +1,35 @@
+<!-- app/templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heartbeat Coders E-Recruitment</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Heartbeat Coders E-Recruitment</h1>
+    <nav>
+       <a href="/dashboard">Home</a>
+      <a href="/jobs">Jobs</a>
+      {% if request.user %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/auth/logout">Logout</a>
+      {% else %}
+        <a href="/login">Login</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Welcome to Our E-Recruitment Portal</h1>
+    <p>Find your dream job, apply online, and track your application easily.</p>
+    <button onclick="window.location.href='/register'">Get Started</button>
+  </div>
+
+  <footer>
+    &copy; 2025 Heartbeat Coders | 100Days Python Bootcamp Inspired
+  </footer>
+</body>
+</html>

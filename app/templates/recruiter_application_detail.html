@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Details - Heartbeat Coders</title>
+  <style>
+    /* Reuse styles from recruiter_applications.html for consistency */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      width: 250px;
+      background-color: #2F4F2F;
+      color: #D4E6D4;
+      padding: 20px 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+    
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid #3E6B3E;
+    }
+    
+    .sidebar-header h2 {
+      color: #fff;
+      font-size: 1.3rem;
+    }
+    
+    .sidebar-nav {
+      margin-top: 20px;
+    }
+    
+    .nav-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .nav-item:hover, .nav-item.active {
+      background-color: #4A7A4A;
+    }
+    
+    .nav-item i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      background-color: #fff;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .header h1 {
+      color: #2F4F2F;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #4A7A4A;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .application-details {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .detail-group {
+      margin-bottom: 20px;
+    }
+    
+    .detail-group label {
+      font-weight: 600;
+      color: #555;
+      display: block;
+      margin-bottom: 8px;
+    }
+    
+    .detail-group p {
+      background-color: #f9f9f9;
+      padding: 12px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    
+    .status {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+    
+    .status.submitted {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    .status.shortlisted {
+      background-color: #e8f5e9;
+      color: #388e3c;
+    }
+    
+    .status.rejected {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+    
+    .action-link {
+      color: #2F4F2F;
+      text-decoration: none;
+      font-weight: 600;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    
+    .action-link:hover {
+      text-decoration: underline;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .btn {
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: #2F4F2F;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #3E6B3E;
+    }
+    
+    .btn-success {
+      background-color: #388e3c;
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background-color: #2e7d32;
+    }
+    
+    .btn-danger {
+      background-color: #d32f2f;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #b71c1c;
+    }
+    
+    .btn-secondary {
+      background-color: #757575;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #616161;
+    }
+    
+    .rating-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .rating-stars {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .star {
+      font-size: 24px;
+      color: #ddd;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .star:hover,
+    .star.active {
+      color: #ffc107;
+    }
+    
+    .notes-section {
+      margin-top: 20px;
+    }
+    
+    .notes-section textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      resize: vertical;
+    }
+    
+    .notes-section button {
+      margin-top: 10px;
+    }
+    
+    .action-feedback {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    
+    .action-feedback.success {
+      background-color: #e8f5e9;
+      color: #388e3c;
+      display: block;
+    }
+    
+    .action-feedback.error {
+      background-color: #ffebee;
+      color: #d32f2f;
+      display: block;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>Heartbeat Coders</h2>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item" onclick="loadDashboard()">
+        <i>📊</i> Dashboard
+      </div>
+      <div class="nav-item" onclick="loadCreateJob()">
+        <i>➕</i> Create Job
+      </div>
+      <div class="nav-item active" onclick="loadReviewApplications()">
+        <i>📝</i> Review Applications
+      </div>
+      <div class="nav-item" onclick="logout()">
+        <i>🚪</i> Logout
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <div class="header">
+      <h1>Application Details</h1>
+      <div class="user-info">
+        <div class="user-avatar">{{ user.first_name|first }}{{ user.last_name|first }}</div>
+        <span>{{ user.first_name }} {{ user.last_name }}</span>
+      </div>
+    </div>
+    
+    <div class="application-details">
+      <div class="detail-group">
+        <label>Applicant Name</label>
+        <p>{{ application.user.name }}</p>
+      </div>
+      
+      <div class="detail-group">
+        <label>Email</label>
+        <p>{{ application.user.email }}</p>
+      </div>
+      
+      <div class="detail-group">
+        <label>Phone</label>
+        <p>{{ application.user.phone }}</p>
+      </div>
+      
+      <div class="detail-group">
+        <label>Job Title</label>
+        <p>{{ application.job.title }}</p>
+      </div>
+      
+      <div class="detail-group">
+        <label>Application Status</label>
+        <p><span class="status {{ application.status }}">{{ application.status }}</span></p>
+      </div>
+      
+      <div class="detail-group">
+        <label>Score</label>
+        <p id="current-score">{{ application.score if application.score else 'Not rated yet' }}</p>
+        <div class="rating-container">
+          <div class="rating-stars">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+          </div>
+          <button id="submit-rating" class="btn btn-secondary">Submit Rating</button>
+        </div>
+      </div>
+      
+      <div class="detail-group">
+        <label>Cover Letter</label>
+        <p>{{ application.reason }}</p>
+      </div>
+      
+      <div class="detail-group">
+        <label>Applied On</label>
+        <p>{{ application.created_at }}</p>
+      </div>
+      
+      {% if application.has_cv %}
+      <div class="detail-group">
+        <label>CV</label>
+        <p><a href="/applications/{{ application.id }}/cv" class="action-link">Download CV</a></p>
+      </div>
+      {% endif %}
+      
+      <div class="action-buttons">
+        <button id="shortlist-btn" class="btn btn-success">Shortlist Candidate</button>
+        <button id="reject-btn" class="btn btn-danger">Reject Application</button>
+        <button id="move-to-review-btn" class="btn btn-secondary">Move Back to Review</button>
+      </div>
+      
+      <div id="action-feedback" class="action-feedback"></div>
+      
+      <div class="notes-section">
+        <h3>Notes</h3>
+        <textarea id="application-notes" placeholder="Add private notes about this candidate...">{{ application.notes if application.notes else '' }}</textarea>
+        <button id="save-notes" class="btn btn-primary">Save Notes</button>
+      </div>
+      
+      <div class="detail-group">
+        <a href="/recruiter/applications" class="action-link">Back to Applications</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loadDashboard() {
+      window.location.href = '/recruiter/dashboard';
+    }
+    
+    function loadCreateJob() {
+      window.location.href = '/jobs/create';
+    }
+    
+    function loadReviewApplications() {
+      window.location.href = '/recruiter/applications';
+    }
+    
+    function logout() {
+      window.location.href = '/logout';
+    }
+    
+    // Rating functionality
+    const stars = document.querySelectorAll('.star');
+    const submitRatingBtn = document.getElementById('submit-rating');
+    const currentScoreElement = document.getElementById('current-score');
+    let selectedRating = 0;
+    
+    // Initialize stars with current rating if exists
+    const currentRating = {{ application.score if application.score else 0 }};
+    if (currentRating > 0) {
+      highlightStars(currentRating);
+      selectedRating = currentRating;
+    }
+    
+    stars.forEach(star => {
+      star.addEventListener('click', () => {
+        const value = parseInt(star.getAttribute('data-value'));
+        selectedRating = value;
+        highlightStars(value);
+      });
+    });
+    
+    function highlightStars(count) {
+      stars.forEach(star => {
+        const value = parseInt(star.getAttribute('data-value'));
+        star.classList.toggle('active', value <= count);
+      });
+    }
+    
+    submitRatingBtn.addEventListener('click', async () => {
+      if (selectedRating === 0) {
+        showFeedback('Please select a rating first', 'error');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/api/applications/{{ application.id }}/score`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ score: selectedRating })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          currentScoreElement.textContent = data.score;
+          showFeedback('Rating submitted successfully!', 'success');
+        } else {
+          const error = await response.json();
+          showFeedback(error.detail || 'Failed to submit rating', 'error');
+        }
+      } catch (error) {
+        showFeedback('Network error while submitting rating', 'error');
+      }
+    });
+    
+    // Application status actions
+    const shortlistBtn = document.getElementById('shortlist-btn');
+    const rejectBtn = document.getElementById('reject-btn');
+    const moveToReviewBtn = document.getElementById('move-to-review-btn');
+    const actionFeedback = document.getElementById('action-feedback');
+    
+    shortlistBtn.addEventListener('click', () => updateStatus('shortlisted'));
+    rejectBtn.addEventListener('click', () => updateStatus('rejected'));
+    moveToReviewBtn.addEventListener('click', () => updateStatus('submitted'));
+    
+    async function updateStatus(newStatus) {
+      try {
+        const response = await fetch(`/api/applications/{{ application.id }}/status`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          showFeedback(`Application ${newStatus} successfully!`, 'success');
+          // Reload the page to reflect the new status
+          setTimeout(() => window.location.reload(), 1500);
+        } else {
+          const error = await response.json();
+          showFeedback(error.detail || 'Failed to update status', 'error');
+        }
+      } catch (error) {
+        showFeedback('Network error while updating status', 'error');
+      }
+    }
+    
+    // Notes functionality
+    const saveNotesBtn = document.getElementById('save-notes');
+    const notesTextarea = document.getElementById('application-notes');
+    
+    saveNotesBtn.addEventListener('click', async () => {
+      const notes = notesTextarea.value;
+      
+      try {
+        const response = await fetch(`/api/applications/{{ application.id }}/notes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ notes })
+        });
+        
+        if (response.ok) {
+          showFeedback('Notes saved successfully!', 'success');
+        } else {
+          const error = await response.json();
+          showFeedback(error.detail || 'Failed to save notes', 'error');
+        }
+      } catch (error) {
+        showFeedback('Network error while saving notes', 'error');
+      }
+    });
+    
+    function showFeedback(message, type) {
+      actionFeedback.textContent = message;
+      actionFeedback.className = 'action-feedback ' + type;
+      
+      // Hide feedback after 5 seconds
+      setTimeout(() => {
+        actionFeedback.style.display = 'none';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Applicant Dashboard - Heartbeat Coders</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #2F4F2F; /* dark forest green */
+      color: #D4E6D4; /* light sage */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    header {
+      background-color: #1F321F;
+      color: #D4E6D4;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: #D4E6D4;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    nav a:hover, nav a.active {
+      background-color: #4A7A4A;
+      text-decoration: none;
+      color: #FFF;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #3E6B3E;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      padding: 30px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-weight: 900;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #D4E6D4;
+      text-align: center;
+    }
+
+    .application {
+      border: 2px solid #D4E6D4;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 25px;
+      background-color: #2F4F2F;
+    }
+
+    .job-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #D4E6D4;
+      margin-bottom: 10px;
+    }
+
+    .company-name {
+      font-size: 1.1rem;
+      font-style: italic;
+      margin-bottom: 10px;
+      color: #A3C586;
+    }
+
+    .status {
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #A3C586;
+    }
+
+    .status.submitted {
+      color: #87CEEB;
+    }
+
+    .status.shortlisted {
+      color: #98FB98;
+    }
+
+    .status.rejected {
+      color: #F08080;
+    }
+
+    .application-details p {
+      margin: 8px 0;
+    }
+
+    button.withdraw-btn {
+      background-color: #4A7A4A;
+      color: #D4E6D4;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 1rem;
+    }
+    
+    button.withdraw-btn:hover:not(:disabled) {
+      background-color: #2B4B2B;
+    }
+
+    button.withdraw-btn:disabled {
+      background-color: #5A5A5A;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .no-applications {
+      text-align: center;
+      color: #A3C586;
+      font-size: 1.2rem;
+      margin-top: 50px;
+    }
+
+    .no-applications a {
+      color: #87CEEB;
+      text-decoration: underline;
+    }
+
+    footer {
+      background-color: #1F321F;
+      color: #D4E6D4;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Heartbeat Coders E-Recruitment</h1>
+    <nav>
+      <a href="/dashboard">Home</a>
+      <a href="/jobs">Jobs</a>
+      <a href="/dashboard" class="active">Applicant Dashboard</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Welcome, {{ user.first_name }}!</h1>
+    <h2 style="text-align: center; margin-bottom: 30px; color: #A3C586;">Your Applications</h2>
+
+    {% if applications %}
+      {% for application in applications %}
+      <div class="application" id="app-{{ application.id }}">
+        <div class="job-title">{{ application.job.title }}</div>
+        <div class="company-name">{{ application.job.description[:100] }}{% if application.job.description|length > 100 %}...{% endif %}</div>
+        <div class="status {{ application.status }}">
+          Status: <strong>{{ application.status.title() }}</strong>
+        </div>
+        <div class="application-details">
+          <p>Applied on: {{ application.created_at.strftime('%Y-%m-%d') }}</p>
+          <p>Application Deadline: {{ application.job.deadline.strftime('%Y-%m-%d') }}</p>
+          {% if application.score %}
+          <p>Score: {{ application.score }}</p>
+          {% endif %}
+          {% if application.reason %}
+          <p>Cover Letter: {{ application.reason[:100] }}{% if application.reason|length > 100 %}...{% endif %}</p>
+          {% endif %}
+        </div>
+        {% if application.status not in ['rejected', 'withdrawn'] %}
+        <button class="withdraw-btn" data-app-id="{{ application.id }}">Withdraw Application</button>
+        {% else %}
+        <button class="withdraw-btn" disabled>Cannot Withdraw</button>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-applications">
+        <p>You haven't applied to any jobs yet.</p>
+        <p><a href="/jobs">Browse available jobs</a> to get started!</p>
+      </div>
+    {% endif %}
+
+  </main>
+
+  <footer>
+    &copy; 2025 Heartbeat Coders | Mzuzu University Inspired
+  </footer>
+
+  <script>
+    // Withdraw application functionality
+    document.querySelectorAll('.withdraw-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        if (button.disabled) return;
+
+        const appId = button.getAttribute('data-app-id');
+        if (confirm('Are you sure you want to withdraw this application?')) {
+          try {
+            const response = await fetch(`/applications/${appId}/withdraw`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            });
+
+            if (response.ok) {
+              const appDiv = document.getElementById(`app-${appId}`);
+              appDiv.style.opacity = '0.5';
+              const statusDiv = appDiv.querySelector('.status');
+              statusDiv.innerHTML = 'Status: <strong>Withdrawn</strong>';
+              statusDiv.className = 'status withdrawn';
+              button.textContent = 'Withdrawn';
+              button.disabled = true;
+            } else {
+              alert('Failed to withdraw application. Please try again.');
+            }
+          } catch (error) {
+            console.error('Error withdrawing application:', error);
+            alert('An error occurred. Please try again.');
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
